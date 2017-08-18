@@ -1,0 +1,11 @@
+{
+  "name": "react-native-osplayer",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A React Native wrapper for the VisualOn OnStream MediaPlayer",
+  "main": "index.js",
+  "author": "Devin Abbott <devinabbott@gmail.com>",
+  "dependencies": {
+    "react-native-root-modal": "^1.0.7"
+  }
+}
