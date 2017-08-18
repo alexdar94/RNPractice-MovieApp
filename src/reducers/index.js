@@ -3,13 +3,13 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-	movies:''
+	topMovies:''
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case MOVIES_FETCH:
-      return {...state, movies:action.payload};
+      return {...state, topMovies:action.payload};
     default:
       return state;
   }

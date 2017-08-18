@@ -42,7 +42,7 @@ class TopMoviesScene extends Component {
 }
 
 const mapStateToProps = state => {
-  const movies = _.map(state.movies, (val) => {
+  const movies = _.map(state.topMovies, (val) => {
     return { ...val};
   });
 

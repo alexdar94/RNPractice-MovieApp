@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { CardSection } from './index';
 
@@ -10,11 +10,13 @@ class ListItem extends Component {
 
   render() {
     const { title } = this.props.movies;
-
+		const image = this.props.movies['im:image'][2].label;
+		console.log(this.props.movies);
     return (
       <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
         <View>
-          <CardSection>
+          <CardSection style={{flexDirection: 'row'}}>
+          	<Image style={{width: 50, height: 50}} source={{uri: image}}/>
             <Text style={styles.titleStyle}>
               {title.label}
             </Text>
