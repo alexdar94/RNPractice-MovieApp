@@ -7,8 +7,7 @@ export const moviesFetch = () => {
 	return (dispatch) => {
 		axios.get('https://itunes.apple.com/us/rss/topmovies/limit=25/json')
 		  .then((response) => {
-		  	console.log(response.data);
-        dispatch({ type: MOVIES_FETCH, payload:  response.data});
+        dispatch({ type: MOVIES_FETCH, payload: response.data.feed.entry});
       })
 		  .catch(function (error) {
 		    console.log(error);

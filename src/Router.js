@@ -7,7 +7,7 @@ class RouterComponent extends Component {
 
 	render(){
 		return (
-			<Router sceneStyle={{paddingTop: 65}}>
+			<Router>
 				<Scene key="root">
 					<Scene key="topMovies" initial component={TopMoviesScene} title="Top Movies" />
 				</Scene>
