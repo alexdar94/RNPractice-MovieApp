@@ -25,8 +25,8 @@ class TopMoviesScene extends Component {
     this.dataSource = ds.cloneWithRows(movies);
   }
 
-	renderRow(movies) {
-    return <ListItem movies={movies} />;
+	renderRow(movie) {
+    return <ListItem movie={movie} />;
   }
 
   render() {

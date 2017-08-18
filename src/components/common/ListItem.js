@@ -5,13 +5,12 @@ import { CardSection } from './index';
 
 class ListItem extends Component {
   onRowPress() {
-    // Actions.employeeEdit({ employee: this.props.employee });
+    Actions.movieDetails({ movie: this.props.movie });
   }
 
   render() {
-    const { title } = this.props.movies;
-		const image = this.props.movies['im:image'][2].label;
-		console.log(this.props.movies);
+    const { title } = this.props.movie;
+		const image = this.props.movie['im:image'][2].label;
     return (
       <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
         <View>
