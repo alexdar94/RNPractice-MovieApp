@@ -1,0 +1,89 @@
+{
+  "_args": [
+    [
+      "react-native-video-controls@1.1.0",
+      "/Users/chenghan/chooch/Dev/luveapp"
+    ]
+  ],
+  "_from": "react-native-video-controls@1.1.0",
+  "_id": "react-native-video-controls@1.1.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-video-controls",
+  "_nodeVersion": "6.8.1",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/react-native-video-controls-1.1.0.tgz_1482534715462_0.37196281529031694"
+  },
+  "_npmUser": {
+    "email": "kmilloy@nubix.ca",
+    "name": "kylemilloy"
+  },
+  "_npmVersion": "3.10.8",
+  "_phantomChildren": {
+    "keymirror": "0.1.1"
+  },
+  "_requested": {
+    "name": "react-native-video-controls",
+    "raw": "react-native-video-controls@1.1.0",
+    "rawSpec": "1.1.0",
+    "scope": null,
+    "spec": "1.1.0",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-video-controls/-/react-native-video-controls-1.1.0.tgz",
+  "_shasum": "fe0f81906683c7b36b718aadc22b7e91618d7c1c",
+  "_shrinkwrap": null,
+  "_spec": "react-native-video-controls@1.1.0",
+  "_where": "/Users/chenghan/chooch/Dev/luveapp",
+  "author": {
+    "name": "Nubix",
+    "url": "https://github.com/itsnubix"
+  },
+  "bugs": {
+    "url": "https://github.com/itsnubix/react-native-video-controls/issues"
+  },
+  "dependencies": {
+    "lodash": "^4.16.4"
+  },
+  "description": "A set of GUI controls for the react-native-video component",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "fe0f81906683c7b36b718aadc22b7e91618d7c1c",
+    "tarball": "https://registry.npmjs.org/react-native-video-controls/-/react-native-video-controls-1.1.0.tgz"
+  },
+  "gitHead": "1619d73ab2daabeff379ae617ea88b958f704496",
+  "homepage": "https://github.com/itsnubix/react-native-video-controls#readme",
+  "keywords": [
+    "react video controls",
+    "react video player",
+    "react-native",
+    "react-native-video"
+  ],
+  "license": "MIT",
+  "main": "VideoPlayer.js",
+  "maintainers": [
+    {
+      "name": "kylemilloy",
+      "email": "kmilloy@nubix.ca"
+    }
+  ],
+  "name": "react-native-video-controls",
+  "optionalDependencies": {},
+  "peerDependencies": {
+
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/itsnubix/react-native-video-controls.git"
+  },
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 1"
+  },
+  "version": "1.1.0"
+}
