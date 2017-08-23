@@ -4,7 +4,7 @@ import Video from 'react-native-video';
 
 class MovieDetailsScene extends Component {
 
-    state = {preRollComplete: false, videoComplete: false};
+    state = {startPreRoll: true, startVideo: false, startPostRoll: false};
 
     renderVideoView(source, onEndCallback) {
         return (
@@ -28,25 +28,24 @@ class MovieDetailsScene extends Component {
     }
 
     onPreRollEnd() {
-        this.setState({preRollComplete: true});
+        this.setState({startPreRoll: false, startVideo: true});
     }
 
     onVideoEnd() {
-        this.setState({videoComplete: true});
-        this.setState({preRollComplete: false});
+        this.setState({startVideo: false, startPostRoll: true});
     }
 
     onPostRollEnd() {
-        this.setState({videoComplete: false});
-        this.setState({preRollComplete: false});
+        this.setState({startPostRoll: false});
     }
 
     render() {
         return (
+            //{uri: this.props.movie.link[1].attributes.href}
             <View style={{flex: 1}}>
-                {this.state.videoComplete ? this.renderVideoView(require('../../resources/video.mp4'), this.onPostRollEnd) : null}
-                {this.state.preRollComplete ? this.renderVideoView({uri: this.props.movie.link[1].attributes.href}, this.onVideoEnd) : null}
-                {!this.state.preRollComplete ? this.renderVideoView(require('../../resources/video.mp4'), this.onPreRollEnd) : null}
+                {this.state.startPostRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPostRollEnd) : null}
+                {this.state.startVideo ? this.renderVideoView(require('../../resources/video.mp4'), this.onVideoEnd) : null}
+                {this.state.startPreRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPreRollEnd) : null}
             </View>
         );
     }
