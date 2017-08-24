@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 
 class MovieDetailsScene extends Component {
 
     state = {startPreRoll: true, startVideo: false, startPostRoll: false};
 
-    renderVideoView(source, onEndCallback) {
+    renderVideoView(source, onEndCallback, isAd) {
         return (
             <VideoPlayer source={source}   // Can be a URL or a local file.
                          ref={(ref) => {
@@ -25,6 +24,7 @@ class MovieDetailsScene extends Component {
                          progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                          onEnd={onEndCallback.bind(this)}
                          navigator={this.props.navigator}
+                         isAd={isAd}
                          style={styles.backgroundVideo}/>
         );
     }
@@ -46,11 +46,10 @@ class MovieDetailsScene extends Component {
             //{this.state.startVideo ? this.renderVideoView({uri: this.props.movie.link[1].attributes.href}, this.onVideoEnd) : null}
             <View style={{flex: 1}}>
                 <View style={{height: Dimensions.get('window').width * (9 / 16), backgroundColor: 'black'}}>
-                    {this.state.startPostRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPostRollEnd) : null}
-                    {this.state.startVideo ? this.renderVideoView({uri: this.props.movie.link[1].attributes.href}, this.onVideoEnd) : null}
-                    {this.state.startPreRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPreRollEnd) : null}
+                    {this.state.startPostRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPostRollEnd, false) : null}
+                    {this.state.startVideo ? this.renderVideoView({uri: this.props.movie.link[1].attributes.href}, this.onVideoEnd, false) : null}
+                    {this.state.startPreRoll ? this.renderVideoView(require('../../resources/video.mp4'), this.onPreRollEnd, true) : null}
                 </View>
-                <View style={{flex: 1, background: 'white'}}/>
             </View>
         );
     }
