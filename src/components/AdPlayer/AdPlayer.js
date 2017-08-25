@@ -850,11 +850,11 @@ export default class VideoPlayer extends Component {
                     <TouchableWithoutFeedback
                         onPress={this.events.onEnd} style={{alignSelf: 'flex-end'}}>
                         <View style={styles.ad.container}>
-                            <Text style={{color: 'white'}}>
+                            <Text style={{color: 'white', margin: 8}}>
                                 Skip ad
                             </Text>
                             <Image source={require('./assets/img/next.png')}
-                                   style={{width: 15, height: 15}}/>
+                                   style={{width: 15, height: 15, marginRight: 8}}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </Animated.View>
@@ -1002,7 +1002,7 @@ export default class VideoPlayer extends Component {
             <Text style={styles.controls.timerText}>
                 {this.calculateTime()}
             </Text>,
-            this.methods.toggleTimer,
+            this.methods.onVisitAdvertiser,
             styles.controls.timer
         );
     }
@@ -1165,7 +1165,6 @@ const styles = {
             resizeMode: 'stretch',
         },
         control: {
-            padding: 16,
         },
         text: {
             backgroundColor: 'transparent',
@@ -1179,13 +1178,11 @@ const styles = {
             justifyContent: 'center',
         },
         top: {
-            flex: 1,
             alignItems: 'flex-end',
             justifyContent: 'flex-start',
         },
         bottom: {
             alignItems: 'stretch',
-            flex: 2,
             justifyContent: 'flex-end',
         },
         seekbar: {
@@ -1241,6 +1238,7 @@ const styles = {
             backgroundColor: 'transparent',
             color: '#FFF',
             fontSize: 11,
+            marginBottom:8
         },
     }),
     seek: StyleSheet.create({
