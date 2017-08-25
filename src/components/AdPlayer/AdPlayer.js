@@ -884,66 +884,21 @@ export default class VideoPlayer extends Component {
      * Visit Advertiser button control
      */
     renderVisitAdvertiser() {
-        return this.renderControl(
-            <Text style={{backgroundColor: 'transparent', color: '#FFF', marginRight: 8}}>
-                Visit advertiser
-            </Text>,
-            this.methods.onVisitAdvertiser
-        );
-    }
-
-    /**
-     * Back button control
-     */
-    renderBack() {
-        return this.renderControl(
-            <Image
-                source={require('./assets/img/back.png')}
-                style={styles.controls.back}
-            />,
-            this.methods.onBack,
-            styles.controls.back
-        );
-    }
-
-    /**
-     * Render the volume slider and attach the pan handlers
-     */
-    renderVolume() {
         return (
-            <View style={styles.volume.container}>
-                <View style={[
-                    styles.volume.fill,
-                    {width: this.state.volumeFillWidth}
-                ]}/>
-                <View style={[
-                    styles.volume.track,
-                    {width: this.state.volumeTrackWidth}
-                ]}/>
-                <View
-                    style={[
-                        styles.volume.handle,
-                        {
-                            left: this.state.volumePosition
-                        }
-                    ]}
-                    {...this.player.volumePanResponder.panHandlers}
-                >
-                    <Image style={styles.volume.icon} source={require('./assets/img/volume.png')}/>
-                </View>
-            </View>
-        );
-    }
-
-    /**
-     * Render fullscreen toggle and set icon based on the fullscreen state.
-     */
-    renderFullscreen() {
-        let source = this.state.isFullscreen === true ? require('./assets/img/shrink.png') : require('./assets/img/expand.png');
-        return this.renderControl(
-            <Image source={source}/>,
-            this.methods.toggleFullscreen,
-            styles.controls.fullscreen
+            <Animated.View style={[
+                styles.controls.top,
+                {
+                    opacity: this.animations.topControl.opacity,
+                    marginTop: this.animations.topControl.marginTop,
+                }
+            ]}>
+                <TouchableWithoutFeedback
+                    onPress={this.methods.onVisitAdvertiser} style={{alignSelf: 'flex-end'}}>
+                    <Text style={{backgroundColor: 'transparent', color: '#FFF', margin:8}}>
+                        Visit advertiser
+                    </Text>
+                </TouchableWithoutFeedback>
+            </Animated.View>
         );
     }
 
