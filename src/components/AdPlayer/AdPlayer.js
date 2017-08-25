@@ -49,7 +49,8 @@ export default class VideoPlayer extends Component {
             currentTime: 0,
             error: false,
             duration: 0,
-            mustWatchAdLength: 3,
+            mustWatchAdLength: 5,
+            visible: true
         };
 
         /**
@@ -67,7 +68,7 @@ export default class VideoPlayer extends Component {
          */
         this.events = {
             onError: this.props.onError || this._onError.bind(this),
-            onEnd: this.props.onEnd || this._onEnd.bind(this),
+            onEnd: this._onEnd.bind(this),
             onScreenPress: this._onScreenPress.bind(this),
             onLoadStart: this._onLoadStart.bind(this),
             onProgress: this._onProgress.bind(this),
@@ -210,6 +211,11 @@ export default class VideoPlayer extends Component {
      * new page.
      */
     _onEnd() {
+        this.setState({visible: false});
+        // If onEndCallback is provided
+        if (this.props.onEnd !== undefined) {
+            this.props.onEnd()
+        }
     }
 
     /**
@@ -1090,42 +1096,47 @@ export default class VideoPlayer extends Component {
      * Provide all of our options and render the whole component.
      */
     render() {
-        return (
-            <TouchableWithoutFeedback
-                onPress={this.events.onScreenPress}
-                style={[styles.player.container, this.styles.containerStyle]}
-            >
-                <View style={[styles.player.container, this.styles.containerStyle]}>
-                    <Video
-                        {...this.props}
-                        ref={videoPlayer => this.player.ref = videoPlayer}
+        if (this.state.visible) {
+            return (
+                <TouchableWithoutFeedback
+                    onPress={this.events.onScreenPress}
+                    style={[styles.player.container, this.styles.containerStyle]}
+                >
+                    <View style={[styles.player.container, this.styles.containerStyle]}>
+                        <Video
+                            {...this.props}
+                            ref={videoPlayer => this.player.ref = videoPlayer}
 
-                        resizeMode={this.state.resizeMode}
-                        volume={this.state.volume}
-                        paused={this.state.paused}
-                        muted={this.state.muted}
-                        rate={this.state.rate}
+                            resizeMode={this.state.resizeMode}
+                            volume={this.state.volume}
+                            paused={this.state.paused}
+                            muted={this.state.muted}
+                            rate={this.state.rate}
 
-                        {...this.props}
+                            {...this.props}
 
-                        onLoadStart={this.events.onLoadStart}
-                        onProgress={this.events.onProgress}
-                        onError={this.events.onError}
-                        onLoad={this.events.onLoad}
-                        onEnd={this.events.onEnd}
+                            onLoadStart={this.events.onLoadStart}
+                            onProgress={this.events.onProgress}
+                            onError={this.events.onError}
+                            onLoad={this.events.onLoad}
+                            onEnd={this.events.onEnd}
 
-                        style={[styles.player.video, this.styles.videoStyle]}
+                            style={[styles.player.video, this.styles.videoStyle]}
 
-                        source={this.props.source}
-                    />
-                    {this.renderError()}
-                    {this.renderTopControls()}
-                    {this.renderLoader()}
-                    {this.renderSkipAd()}
-                    {this.renderBottomControls()}
-                </View>
-            </TouchableWithoutFeedback>
-        );
+                            source={this.props.source}
+                        />
+                        {this.renderError()}
+                        {this.renderVisitAdvertiser()}
+                        {this.renderLoader()}
+                        {this.renderSkipAd()}
+                        {this.renderBottomControls()}
+                    </View>
+                </TouchableWithoutFeedback>
+            );
+        } else {
+            return null;
+        }
+
     }
 }
 
