@@ -894,9 +894,11 @@ export default class VideoPlayer extends Component {
             ]}>
                 <TouchableWithoutFeedback
                     onPress={this.methods.onVisitAdvertiser} style={{alignSelf: 'flex-end'}}>
-                    <Text style={{backgroundColor: 'transparent', color: '#FFF', margin:8}}>
-                        Visit advertiser
-                    </Text>
+                    <View>
+                        <Text style={{backgroundColor: 'transparent', color: '#FFF', margin: 8}}>
+                            Visit advertiser
+                        </Text>
+                    </View>
                 </TouchableWithoutFeedback>
             </Animated.View>
         );
