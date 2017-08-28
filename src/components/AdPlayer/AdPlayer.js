@@ -30,19 +30,14 @@ export default class VideoPlayer extends Component {
             resizeMode: this.props.resizeMode || 'contain',
             paused: this.props.paused || false,
             muted: this.props.muted || false,
-            volume: this.props.volume || 1,
             rate: this.props.rate || 1,
             // Controls
             isFullscreen: isFullscreen,
             showTimeRemaining: true,
-            volumeTrackWidth: 0,
             lastScreenPress: 0,
-            volumeFillWidth: 0,
             seekerFillWidth: 0,
             showControls: true,
-            volumePosition: 0,
             seekerPosition: 0,
-            volumeOffset: 0,
             seekerOffset: 0,
             seeking: false,
             loading: false,
@@ -60,7 +55,6 @@ export default class VideoPlayer extends Component {
             playWhenInactive: this.props.playWhenInactive || false,
             playInBackground: this.props.playInBackground || false,
             repeat: this.props.repeat || false,
-            title: this.props.title || '',
         };
 
         /**
@@ -79,12 +73,8 @@ export default class VideoPlayer extends Component {
          * Functions used throughout the application
          */
         this.methods = {
-            onBack: this.props.onBack || this._onBack.bind(this),
             onVisitAdvertiser: this.props.onVisitAdvertiser || this._onVisitAdvertiser.bind(this),
-            toggleFullscreen: this._toggleFullscreen.bind(this),
-            togglePlayPause: this._togglePlayPause.bind(this),
             toggleControls: this._toggleControls.bind(this),
-            toggleTimer: this._toggleTimer.bind(this),
         };
 
         /**
@@ -92,12 +82,7 @@ export default class VideoPlayer extends Component {
          */
         this.player = {
             controlTimeoutDelay: this.props.controlTimeout || 15000,
-            volumePanResponder: PanResponder,
-            seekPanResponder: PanResponder,
             controlTimeout: null,
-            volumeWidth: 150,
-            iconOffset: 7,
-            seekWidth: 0,
             ref: Video,
         };
 
@@ -400,52 +385,6 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Toggle fullscreen changes resizeMode on
-     * the <Video> component then updates the
-     * isFullscreen state.
-     */
-    _toggleFullscreen() {
-        let state = this.state;
-        state.isFullscreen = !state.isFullscreen;
-        state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
-
-        this.setState(state);
-    }
-
-    /**
-     * Toggle playing state on <Video> component
-     */
-    _togglePlayPause() {
-        let state = this.state;
-        state.paused = !state.paused;
-        this.setState(state);
-    }
-
-    /**
-     * Toggle between showing time remaining or
-     * video duration in the timer control
-     */
-    _toggleTimer() {
-        let state = this.state;
-        state.showTimeRemaining = !state.showTimeRemaining;
-        this.setState(state);
-    }
-
-    /**
-     * The default 'onBack' function pops the navigator
-     * and as such the video player requires a
-     * navigator prop by default.
-     */
-    _onBack() {
-        if (this.props.navigator && this.props.navigator.pop) {
-            this.props.navigator.pop();
-        }
-        else {
-            console.warn('Warning: _onBack requires navigator property to function. Either modify the onBack prop or pass a navigator prop');
-        }
-    }
-
-    /**
      * The default 'onVisitAdvertiser' function pops the navigator
      * and as such the video player requires a
      * navigator prop by default.
@@ -489,9 +428,6 @@ export default class VideoPlayer extends Component {
 
         const formattedMinutes = _.padStart(Math.floor(minutes).toFixed(0), 2, 0);
         const formattedSeconds = _.padStart(Math.floor(seconds).toFixed(0), 2, 0);
-
-        // console.warn(formattedMinutes);
-
 
         return `${ symbol }${ formattedMinutes }:${ formattedSeconds }`;
     }
@@ -544,90 +480,6 @@ export default class VideoPlayer extends Component {
         return this.player.seekerWidth * percent;
     }
 
-    /**
-     * Return the time that the video should be at
-     * based on where the seeker handle is.
-     *
-     * @return {float} time in ms based on seekerPosition.
-     */
-    calculateTimeFromSeekerPosition() {
-        const percent = this.state.seekerPosition / this.player.seekerWidth;
-        return this.state.duration * percent;
-    }
-
-    /**
-     * Seek to a time in the video.
-     *
-     * @param {float} time time to seek to in ms
-     */
-    seekTo(time = 0) {
-        let state = this.state;
-        state.currentTime = time;
-        this.player.ref.seek(time);
-        this.setState(state);
-    }
-
-    /**
-     * Set the position of the volume slider
-     *
-     * @param {float} position position of the volume handle in px
-     */
-    setVolumePosition(position = 0) {
-        let state = this.state;
-        position = this.constrainToVolumeMinMax(position);
-        state.volumePosition = position + this.player.iconOffset;
-        state.volumeFillWidth = position;
-
-        state.volumeTrackWidth = this.player.volumeWidth - state.volumeFillWidth;
-
-        if (state.volumeFillWidth < 0) {
-            state.volumeFillWidth = 0;
-        }
-
-        if (state.volumeTrackWidth > 150) {
-            state.volumeTrackWidth = 150;
-        }
-
-        this.setState(state);
-    }
-
-    /**
-     * Constrain the volume bar to the min/max of
-     * its track's width.
-     *
-     * @param {float} val position of the volume handle in px
-     * @return {float} contrained position of the volume handle in px
-     */
-    constrainToVolumeMinMax(val = 0) {
-        if (val <= 0) {
-            return 0;
-        }
-        else if (val >= this.player.volumeWidth + 9) {
-            return this.player.volumeWidth + 9;
-        }
-        return val;
-    }
-
-    /**
-     * Get the volume based on the position of the
-     * volume object.
-     *
-     * @return {float} volume level based on volume handle position
-     */
-    calculateVolumeFromVolumePosition() {
-        return this.state.volumePosition / this.player.volumeWidth;
-    }
-
-    /**
-     * Get the position of the volume handle based
-     * on the volume
-     *
-     * @return {float} volume handle position in px based on volume
-     */
-    calculateVolumePositionFromVolume() {
-        return this.player.volumeWidth / this.state.volume;
-    }
-
     /*------------------------------------------------------
     | React Component functions
     |-------------------------------------------------------
@@ -637,131 +489,12 @@ export default class VideoPlayer extends Component {
     | Component methods
     |
     */
-
-    /**
-     * Before mounting, init our seekbar and volume bar
-     * pan responders.
-     */
-    componentWillMount() {
-        this.initSeekPanResponder();
-        this.initVolumePanResponder();
-    }
-
-    /**
-     * Upon mounting, calculate the position of the volume
-     * bar based on the volume property supplied to it.
-     */
-    componentDidMount() {
-        const position = this.calculateVolumePositionFromVolume();
-        let state = this.state;
-        this.setVolumePosition(position);
-        state.volumeOffset = position;
-
-        this.setState(state);
-    }
-
     /**
      * When the component is about to unmount kill the
      * timeout less it fire in the prev/next scene
      */
     componentWillUnmount() {
         this.clearControlTimeout();
-    }
-
-    /**
-     * Get our seekbar responder going
-     */
-    initSeekPanResponder() {
-        this.player.seekPanResponder = PanResponder.create({
-
-            // Ask to be the responder.
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
-
-            /**
-             * When we start the pan tell the machine that we're
-             * seeking. This stops it from updating the seekbar
-             * position in the onProgress listener.
-             */
-            onPanResponderGrant: (evt, gestureState) => {
-                let state = this.state;
-                this.clearControlTimeout();
-                state.seeking = true;
-                this.setState(state);
-            },
-
-            /**
-             * When panning, update the seekbar position, duh.
-             */
-            onPanResponderMove: (evt, gestureState) => {
-                const position = this.state.seekerOffset + gestureState.dx;
-                this.setSeekerPosition(position);
-            },
-
-            /**
-             * On release we update the time and seek to it in the video.
-             * If you seek to the end of the video we fire the
-             * onEnd callback
-             */
-            onPanResponderRelease: (evt, gestureState) => {
-                const time = this.calculateTimeFromSeekerPosition();
-                let state = this.state;
-                if (time >= state.duration && !state.loading) {
-                    state.paused = true;
-                    this.events.onEnd();
-                } else {
-                    this.seekTo(time);
-                    this.setControlTimeout();
-                    state.seeking = false;
-                }
-                this.setState(state);
-            }
-        });
-    }
-
-    /**
-     * Initialize the volume pan responder.
-     */
-    initVolumePanResponder() {
-        this.player.volumePanResponder = PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            onPanResponderGrant: (evt, gestureState) => {
-                this.clearControlTimeout();
-            },
-
-            /**
-             * Update the volume as we change the position.
-             * If we go to 0 then turn on the mute prop
-             * to avoid that weird static-y sound.
-             */
-            onPanResponderMove: (evt, gestureState) => {
-                let state = this.state;
-                const position = this.state.volumeOffset + gestureState.dx;
-
-                this.setVolumePosition(position);
-                state.volume = this.calculateVolumeFromVolumePosition();
-
-                if (state.volume <= 0) {
-                    state.muted = true;
-                }
-                else {
-                    state.muted = false;
-                }
-
-                this.setState(state);
-            },
-
-            /**
-             * Update the offset...
-             */
-            onPanResponderRelease: (evt, gestureState) => {
-                let state = this.state;
-                state.volumeOffset = state.volumePosition;
-                this.setControlTimeout();
-                this.setState(state);
-            }
-        });
     }
 
     /*------------------------------------------------------
@@ -791,42 +524,11 @@ export default class VideoPlayer extends Component {
                     callback();
                 }}
                 style={[
-                    styles.controls.control,
                     style
                 ]}
             >
                 {children}
             </TouchableHighlight>
-        );
-    }
-
-    /**
-     * Groups the top bar controls together in an animated
-     * view and spaces them out.
-     */
-    renderTopControls() {
-        return (
-            <Animated.View style={[
-                styles.controls.top,
-                {
-                    opacity: this.animations.topControl.opacity,
-                    marginTop: this.animations.topControl.marginTop,
-                }
-            ]}>
-                {/*<Image
-                    source={require('./assets/img/top-vignette.png')}
-                    style={[styles.controls.column, styles.controls.vignette,
-                    ]}>
-                    <View style={styles.controls.topControlGroup}>
-                        {this.renderBack()}
-                        <View style={styles.controls.pullRight}>
-                            {this.renderVolume()}
-                            {this.renderFullscreen()}
-                        </View>
-                    </View>
-                </Image>*/}
-                {this.renderVisitAdvertiser()}
-            </Animated.View>
         );
     }
 
@@ -880,7 +582,7 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Visit Advertiser button control
+     * Render visit advertiser button
      */
     renderVisitAdvertiser() {
         return (
@@ -961,41 +663,6 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Render the play/pause button and show the respective icon
-     */
-    renderPlayPause() {
-        let source = this.state.paused === true ? require('./assets/img/play.png') : require('./assets/img/pause.png');
-        return this.renderControl(
-            <Image source={source}/>,
-            this.methods.togglePlayPause,
-            styles.controls.playPause
-        );
-    }
-
-    /**
-     * Render our title...if supplied.
-     */
-    renderTitle() {
-        if (this.opts.title) {
-            return (
-                <View style={[
-                    styles.controls.control,
-                    styles.controls.title,
-                ]}>
-                    <Text style={[
-                        styles.controls.text,
-                        styles.controls.titleText
-                    ]} numberOfLines={1}>
-                        {this.opts.title || ''}
-                    </Text>
-                </View>
-            );
-        }
-
-        return null;
-    }
-
-    /**
      * Show our timer.
      */
     renderTimer() {
@@ -1064,7 +731,6 @@ export default class VideoPlayer extends Component {
                             ref={videoPlayer => this.player.ref = videoPlayer}
 
                             resizeMode={this.state.resizeMode}
-                            volume={this.state.volume}
                             paused={this.state.paused}
                             muted={this.state.muted}
                             rate={this.state.rate}
@@ -1099,7 +765,7 @@ export default class VideoPlayer extends Component {
 /**
  * This object houses our styles. There's player
  * specific styles and control specific ones.
- * And then there's volume/seeker styles.
+ * And then there's seeker styles.
  */
 const styles = {
     player: StyleSheet.create({
@@ -1165,8 +831,6 @@ const styles = {
         vignette: {
             resizeMode: 'stretch',
         },
-        control: {
-        },
         text: {
             backgroundColor: 'transparent',
             color: '#FFF',
@@ -1212,9 +876,6 @@ const styles = {
             marginRight: 12,
             marginBottom: 0
         },
-        volume: {
-            flexDirection: 'row',
-        },
         fullscreen: {
             flexDirection: 'row',
         },
@@ -1222,15 +883,6 @@ const styles = {
             position: 'relative',
             width: 80,
             zIndex: 0
-        },
-        title: {
-            alignItems: 'center',
-            flex: 0.6,
-            flexDirection: 'column',
-            padding: 0,
-        },
-        titleText: {
-            textAlign: 'center',
         },
         timer: {
             width: 180,
@@ -1256,44 +908,6 @@ const styles = {
             height: 2,
             width: 1,
         },
-        handle: {
-            position: 'absolute',
-            marginTop: -21,
-            marginLeft: -24,
-            padding: 16,
-            paddingBottom: 4,
-        },
-        circle: {
-            borderRadius: 20,
-            height: 12,
-            width: 12,
-        },
-    }),
-    volume: StyleSheet.create({
-        container: {
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            flexDirection: 'row',
-            height: 1,
-            marginLeft: 20,
-            marginRight: 20,
-            width: 150,
-        },
-        track: {
-            backgroundColor: '#333',
-            height: 1,
-            marginLeft: 7,
-        },
-        fill: {
-            backgroundColor: '#FFF',
-            height: 1,
-        },
-        handle: {
-            position: 'absolute',
-            marginTop: -24,
-            marginLeft: -24,
-            padding: 16,
-        }
     }),
     ad: StyleSheet.create({
         container: {
