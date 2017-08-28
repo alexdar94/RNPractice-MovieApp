@@ -9,13 +9,14 @@ class ListItem extends Component {
   }
 
   render() {
-    const { title } = this.props.movie;
-		const image = this.props.movie['im:image'][2].label;
+    const {title} = this.props.movie;
+    const image = this.props.movie['im:image'][2].label;
+
     return (
       <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
         <View>
           <CardSection style={{flexDirection: 'row'}}>
-          	<Image style={{width: 50, height: 50}} source={{uri: image}}/>
+            <Image style={{width: 50, height: 50}} source={{uri: image}}/>
             <Text style={styles.titleStyle}>
               {title.label}
             </Text>

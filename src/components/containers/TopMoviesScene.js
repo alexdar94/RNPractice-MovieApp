@@ -1,13 +1,13 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
-import { ListView } from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {ListView, Text, View} from 'react-native';
+import {connect} from 'react-redux';
 import ListItem from '../common/ListItem';
-import { moviesFetch } from '../../actions';
-import { Card, CardSection, Button } from '../common';
+import {moviesFetch} from '../../actions';
 
 class TopMoviesScene extends Component {
-	componentWillMount() {
+
+  componentWillMount() {
     this.props.moviesFetch();
 
     this.createDataSource(this.props);
@@ -17,7 +17,7 @@ class TopMoviesScene extends Component {
     this.createDataSource(nextProps);
   }
 
-	createDataSource({ movies }) {
+  createDataSource({movies}) {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
@@ -25,28 +25,27 @@ class TopMoviesScene extends Component {
     this.dataSource = ds.cloneWithRows(movies);
   }
 
-	renderRow(movie) {
-    return <ListItem movie={movie} />;
+  renderRow(movie) {
+    return <ListItem movie={movie}/>;
   }
 
   render() {
     return (
-      <ListView style={{marginTop:0}}
-        enableEmptySections
-        dataSource={this.dataSource}
-        renderRow={this.renderRow}
+      <ListView style={{marginTop: 0}}
+                enableEmptySections
+                dataSource={this.dataSource}
+                renderRow={this.renderRow}
       />
     );
   }
-
 }
 
 const mapStateToProps = state => {
   const movies = _.map(state.topMovies, (val) => {
-    return { ...val};
+    return {...val};
   });
 
-  return { movies };
+  return {movies};
 };
 
-export default connect(mapStateToProps, { moviesFetch })(TopMoviesScene);
+export default connect(mapStateToProps, {moviesFetch})(TopMoviesScene);
