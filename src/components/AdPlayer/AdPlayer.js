@@ -155,8 +155,6 @@ export default class VideoPlayer extends Component {
         if (typeof this.props.onLoadStart === 'function') {
             this.props.onLoadStart(...arguments);
         }
-
-        let adTimeLeft = Math.floor(this.state.mustWatchAdLength - this.state.currentTime)
     }
 
     /**
@@ -833,12 +831,13 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * SkipAd button control
+     * Render SkipAd button
+     * Countdown start from mustWatchAdLength state
+     * After countdown completes, allow user to skip ad
      */
     renderSkipAd() {
-        let adTimeLeft = Math.floor(this.state.mustWatchAdLength - this.state.currentTime);
-        let canSkipAd = adTimeLeft < 1;
-        if (canSkipAd) {
+        let mustWatchAdTimeLeft = Math.floor(this.state.mustWatchAdLength - this.state.currentTime);
+        if (mustWatchAdTimeLeft < 1) {
             return (
                 <Animated.View style={[
                     styles.controls.bottom,
@@ -870,7 +869,7 @@ export default class VideoPlayer extends Component {
                 ]}>
                     <View style={styles.ad.countdownContainer}>
                         <Text style={{color: 'white', width: 80, textAlign: 'center', marginRight: 8}}>
-                            {`You can skip ad in ${adTimeLeft}s`}
+                            {`You can skip ad in ${mustWatchAdTimeLeft}s`}
                         </Text>
                         <Image source={this.props.preview}
                                style={{width: 40, height: 50, flex: 1}}/>
