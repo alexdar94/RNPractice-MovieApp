@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Image, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {Actions} from 'react-native-router-flux';
 import {CardSection} from './index';
 import RootSiblings from 'react-native-root-siblings';
 
@@ -10,7 +9,6 @@ let sibling = null;
 
 class ListItem extends Component {
   onRowPress() {
-    //Actions.movieDetails({ movie: this.props.movie });
     this.addSibling();
   }
 
