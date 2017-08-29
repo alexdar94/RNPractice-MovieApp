@@ -6,10 +6,11 @@ import {Actions} from 'react-native-router-flux';
 
 const {width, height: screenHeight} = Dimensions.get("window");
 const height = width * 0.5625;
+let minimized = false;
 
 class MovieDetailsScene extends Component {
 
-  state = {startPreRoll: true, startVideo: false, startPostRoll: false, minimized: false};
+  state = {startPreRoll: true, startVideo: false, startPostRoll: false};
 
   componentWillMount() {
     this.initViewPanResponder();
