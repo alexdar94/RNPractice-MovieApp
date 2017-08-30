@@ -17,7 +17,7 @@ class MovieDetailsScene extends Component {
   }
 
   initViewPanResponder() {
-    this._animation = new Animated.Value(0);
+    this.minimizeVideoAnim = new Animated.Value(0);
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
@@ -114,24 +114,24 @@ class MovieDetailsScene extends Component {
   }
 
   render() {
-    const opacityInterpolate = this._animation.interpolate({
+    const opacityInterpolate = this.minimizeVideoAnim.interpolate({
       inputRange: [0, 300],
       outputRange: [1, 0],
     });
 
-    const translateYInterpolate = this._animation.interpolate({
+    const translateYInterpolate = this.minimizeVideoAnim.interpolate({
       inputRange: [0, 300],
       outputRange: [0, screenHeight - height + 45],
       extrapolate: "clamp",
     });
 
-    const scaleInterpolate = this._animation.interpolate({
+    const scaleInterpolate = this.minimizeVideoAnim.interpolate({
       inputRange: [0, 300],
       outputRange: [1, 0.5],
       extrapolate: "clamp",
     });
 
-    const translateXInterpolate = this._animation.interpolate({
+    const translateXInterpolate = this.minimizeVideoAnim.interpolate({
       inputRange: [0, 300],
       outputRange: [0, 85],
       extrapolate: "clamp",
