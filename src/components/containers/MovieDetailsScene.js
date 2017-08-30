@@ -140,7 +140,6 @@ class MovieDetailsScene extends Component {
                 ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
                 progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                 onEnd={onEndCallback.bind(this)}
-                style={styles.backgroundVideo}
                 onVisitAdvertiser={() => Actions.visitAdvertiser()}
                 preview={{uri: this.props.movie['im:image'][2].label}}/>
     );
@@ -163,8 +162,7 @@ class MovieDetailsScene extends Component {
                    ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
                    progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                    onEnd={onEndCallback.bind(this)}
-                   navigator={this.props.navigator}
-                   style={styles.backgroundVideo}/>
+                   navigator={this.props.navigator}/>
     );
   }
 
@@ -249,30 +247,17 @@ class MovieDetailsScene extends Component {
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <Animated.View
-          style={[{height: Dimensions.get('window').width * (9 / 16)}, videoStyles]} {...this._panResponder.panHandlers}>
+          style={[{height}, videoStyles]} {...this._panResponder.panHandlers}>
           {this.state.startPreRoll ? this.renderAdView({uri: `http${this.props.movie.link[1].attributes.href.substring(5)}`}, this.onPreRollEnd) : null}
           {this.state.startVideo ? this.renderVideoView({uri: `http${this.props.movie.link[1].attributes.href.substring(5)}`}, this.onVideoEnd) : null}
           {this.state.startPostRoll ? this.renderAdView(require('../../resources/video.mp4'), this.onPostRollEnd) : null}
         </Animated.View>
         <Animated.View style={[{flex: 1}, belowVideoStyles]}>
-          <Text>
-            ABC
-          </Text>
+          <Text>ABC</Text>
         </Animated.View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: Dimensions.get('window').width * (9 / 16),
-  },
-});
 
 export default MovieDetailsScene;
