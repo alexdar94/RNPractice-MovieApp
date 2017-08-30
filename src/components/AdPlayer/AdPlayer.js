@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
 import {
-    PanResponder,
-    Touchable,
   TouchableWithoutFeedback,
   TouchableHighlight,
   StyleSheet,
