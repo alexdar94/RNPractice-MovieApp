@@ -15,7 +15,7 @@ class ListItem extends Component {
   addSibling() {
     sibling && sibling.destroy();
     sibling = new RootSiblings(
-      <MovieDetailsScene movie={this.props.movie}/>
+      <MovieDetailsScene movie={this.props.movie} onDismiss={()=>sibling.destroy()}/>
     );
   };
 

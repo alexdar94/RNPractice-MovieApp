@@ -23,8 +23,14 @@ class MovieDetailsScene extends Component {
 
     // View is out of screen when dismissMinimizedVideoAnim value is -200 or 200
     // Dismiss view when view is out of screen
-    this.dismissMinimizedVideoAnim.addListener(({ value }) => {
-      if(Math.abs(value) === 200) this.props.onDismiss();
+    this.dismissMinimizedVideoAnim.addListener(({value}) => {
+      if (Math.abs(value) === 200) {
+        if (this.props.onDismiss) {
+          this.props.onDismiss();
+        } else {
+          console.warn('Missing onDismiss props to destroy MovieDetailsScene sibling.')
+        }
+      }
     });
 
     this._panResponder = PanResponder.create({
