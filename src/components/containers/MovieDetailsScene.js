@@ -7,6 +7,7 @@ import {Actions} from 'react-native-router-flux';
 const {width, height: screenHeight} = Dimensions.get("window");
 const height = width * 0.5625;
 let minimized = false;
+let onHorizontalTouch = false;
 
 class MovieDetailsScene extends Component {
 
@@ -18,34 +19,99 @@ class MovieDetailsScene extends Component {
 
   initViewPanResponder() {
     this.minimizeVideoAnim = new Animated.Value(0);
+    this.dismissMinimizedVideoAnim = new Animated.Value(0);
+
+    // View is out of screen when dismissMinimizedVideoAnim value is -200 or 200
+    // Dismiss view when view is out of screen
+    this.dismissMinimizedVideoAnim.addListener(({ value }) => {
+      if(Math.abs(value) === 200) this.props.onDismiss();
+    });
+
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
 
       onPanResponderMove: (e, gestureState) => {
-        // custom logic here
 
-        Animated.event([null, {
-          //dx: this.state.minimized === true ? this.dismissMinimizedViewAnim : null,
-          dy: this._animation,
-        }])(e, gestureState);
+        /*if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy) || onHorizontalTouch) {
+          if(minimized){
+            onHorizontalTouch = true;
+            this.minimizeVideoAnim.setOffset(300);
+
+            Animated.event([null, {
+              dx: this.dismissMinimizedVideoAnim,
+            }])(e, gestureState);
+          }
+        } else {
+          minimized = false;
+          Animated.event([null, {
+            dy: this.minimizeVideoAnim,
+          }])(e, gestureState);
+        }*/
+
+        //console.log(gestureState.dx + ' ' + gestureState.dy + ' ' + minimized);
+
+        // When video is minimized and user drag video horizontally
+        // Lock animation to only onHorizontalTouch, listen to dx
+        // When onHorizontalTouch is released, listen to dy
+        if (minimized && gestureState.dx !== 0) {
+          onHorizontalTouch = true;
+          Animated.event([null, {
+            dx: this.dismissMinimizedVideoAnim,
+          }])(e, gestureState);
+        } else if (!onHorizontalTouch) {
+          minimized = false;
+          Animated.event([null, {
+            dy: this.minimizeVideoAnim,
+          }])(e, gestureState);
+        }
+
       },
 
       onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dy > 100) {
-          Animated.timing(this._animation, {
-            toValue: 300,
-            duration: 200,
-          }).start();
-          this._animation.setOffset(300);
-          this.setState({minimized: true});
+        onHorizontalTouch = false;
+        if (minimized) {
+          // Drag far right dismiss
+          if (gestureState.dx > 80) {
+            Animated.timing(this.dismissMinimizedVideoAnim, {
+              toValue: 200,
+              duration: 200,
+            }).start();
+          }
+          // Drag far left dismiss
+          else if (gestureState.dx < -50) {
+            Animated.timing(this.dismissMinimizedVideoAnim, {
+              toValue: -200,
+              duration: 200,
+            }).start();
+          }
+          // Small drag return to normal
+          else {
+            Animated.timing(this.dismissMinimizedVideoAnim, {
+              toValue: 0,
+              duration: 200,
+            }).start();
+          }
         } else {
-          this._animation.setOffset(0);
-          this.setState({minimized: false});
-          Animated.timing(this._animation, {
-            toValue: 0,
-            duration: 200,
-          }).start();
+          // Detected drag release near bottom right, move view to bottom right
+          if (gestureState.dy > 150 || (gestureState.dy > -150 && gestureState.dy < 0)) {
+            Animated.timing(this.minimizeVideoAnim, {
+              toValue: 300,
+              duration: 200,
+            }).start();
+            this.minimizeVideoAnim.setOffset(300);
+            minimized = true;
+          }
+          // Else, move view to top left
+          else {
+            Animated.timing(this.minimizeVideoAnim, {
+              toValue: 0,
+              duration: 200,
+            }).start();
+            this.minimizeVideoAnim.setOffset(0);
+            minimized = false;
+          }
+          console.log(this.minimizeVideoAnim._offset);
         }
       },
     });
@@ -136,6 +202,18 @@ class MovieDetailsScene extends Component {
       outputRange: [0, 85],
       extrapolate: "clamp",
     });
+
+    const opacityInterpolate_Minimized = this.dismissMinimizedVideoAnim.interpolate({
+      inputRange: [-200, 0, 200],
+      outputRange: [0, 1, 0],
+    });
+
+    const translateXInterpolate_Minimized = this.dismissMinimizedVideoAnim.interpolate({
+      inputRange: [-200, 200],
+      outputRange: [-600, 600],
+      extrapolate: "clamp",
+    });
+
     const belowVideoStyles = {
       opacity: opacityInterpolate,
       transform: [
@@ -146,6 +224,7 @@ class MovieDetailsScene extends Component {
     };
 
     const videoStyles = {
+      opacity: opacityInterpolate_Minimized,
       transform: [
         {
           translateY: translateYInterpolate,
@@ -155,6 +234,9 @@ class MovieDetailsScene extends Component {
         },
         {
           scale: scaleInterpolate,
+        },
+        {
+          translateX: translateXInterpolate_Minimized,
         },
       ]
     };
