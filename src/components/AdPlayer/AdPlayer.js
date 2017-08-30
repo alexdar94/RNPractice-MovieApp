@@ -929,7 +929,6 @@ const styles = {
             justifyContent: 'space-around',
             alignSelf: 'flex-end',
             marginTop: 80,
-            marginRight: -15,
         }
     })
 };
