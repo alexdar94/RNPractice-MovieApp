@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Animated, Dimensions, Text, PanResponder,} from 'react-native';
+import {View, StyleSheet, Animated, Dimensions, Text, PanResponder, findNodeHandle, UIManager} from 'react-native';
 import VideoPlayer from 'react-native-video-controls';
 import AdPlayer from '../AdPlayer/AdPlayer';
 import {Actions} from 'react-native-router-flux';
@@ -71,54 +71,54 @@ class MovieDetailsScene extends Component {
             dy: this.minimizeVideoAnim,
           }])(e, gestureState);
         }
-
       },
 
       onPanResponderRelease: (e, gestureState) => {
         onHorizontalTouch = false;
-        if (minimized) {
-          // Drag far right dismiss
-          if (gestureState.dx > 80) {
-            Animated.timing(this.dismissMinimizedVideoAnim, {
-              toValue: 200,
-              duration: 200,
-            }).start();
+        UIManager.measure(findNodeHandle(this.refs.videoPlayers), (x, y, width, height, pageX, pageY) => {
+          if (minimized) {
+            // Drag far right dismiss
+            if (pageX > screenWidth * 0.8) {
+              Animated.timing(this.dismissMinimizedVideoAnim, {
+                toValue: 200,
+                duration: 200,
+              }).start();
+            }
+            // Drag far left dismiss
+            else if (pageX < screenWidth * 0.2) {
+              Animated.timing(this.dismissMinimizedVideoAnim, {
+                toValue: -200,
+                duration: 200,
+              }).start();
+            }
+            // Small drag return to normal
+            else {
+              Animated.timing(this.dismissMinimizedVideoAnim, {
+                toValue: 0,
+                duration: 200,
+              }).start();
+            }
+          } else {
+            // Detected drag release near bottom right, move view to bottom right
+            if (pageY > screenHeight * 0.4) {
+              Animated.timing(this.minimizeVideoAnim, {
+                toValue: 300,
+                duration: 200,
+              }).start();
+              this.minimizeVideoAnim.setOffset(300);
+              minimized = true;
+            } else {
+              this.minimizeVideoAnim.setOffset(0);
+              Animated.timing(this.minimizeVideoAnim, {
+                toValue: 0,
+                duration: 200,
+              }).start();
+              minimized = false;
+            }
           }
-          // Drag far left dismiss
-          else if (gestureState.dx < -50) {
-            Animated.timing(this.dismissMinimizedVideoAnim, {
-              toValue: -200,
-              duration: 200,
-            }).start();
-          }
-          // Small drag return to normal
-          else {
-            Animated.timing(this.dismissMinimizedVideoAnim, {
-              toValue: 0,
-              duration: 200,
-            }).start();
-          }
-        } else {
-          // Detected drag release near bottom right, move view to bottom right
-          if (gestureState.dy > 150 || (gestureState.dy > -150 && gestureState.dy < 0)) {
-            Animated.timing(this.minimizeVideoAnim, {
-              toValue: 300,
-              duration: 200,
-            }).start();
-            this.minimizeVideoAnim.setOffset(300);
-            minimized = true;
-          }
-          // Else, move view to top left
-          else {
-            Animated.timing(this.minimizeVideoAnim, {
-              toValue: 0,
-              duration: 200,
-            }).start();
-            this.minimizeVideoAnim.setOffset(0);
-            minimized = false;
-          }
-          console.log(this.minimizeVideoAnim._offset);
-        }
+        });
+
+
       },
     });
   }
@@ -247,7 +247,7 @@ class MovieDetailsScene extends Component {
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <Animated.View
-          style={[{height}, videoStyles]} {...this._panResponder.panHandlers}>
+          style={[{height}, videoStyles]} {...this._panResponder.panHandlers} ref="videoPlayers">
           {this.state.startPreRoll ? this.renderAdView({uri: `http${this.props.movie.link[1].attributes.href.substring(5)}`}, this.onPreRollEnd) : null}
           {this.state.startVideo ? this.renderVideoView({uri: `http${this.props.movie.link[1].attributes.href.substring(5)}`}, this.onVideoEnd) : null}
           {this.state.startPostRoll ? this.renderAdView(require('../../resources/video.mp4'), this.onPostRollEnd) : null}
