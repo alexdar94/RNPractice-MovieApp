@@ -4,8 +4,8 @@ import VideoPlayer from 'react-native-video-controls';
 import AdPlayer from '../AdPlayer/AdPlayer';
 import {Actions} from 'react-native-router-flux';
 
-const {width, height: screenHeight} = Dimensions.get("window");
-const height = width * 0.5625;
+const {width: screenWidth, height: screenHeight} = Dimensions.get("window");
+const height = screenWidth * 0.5625;
 let minimized = false;
 let onHorizontalTouch = false;
 
