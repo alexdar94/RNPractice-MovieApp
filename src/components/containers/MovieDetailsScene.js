@@ -38,29 +38,12 @@ class MovieDetailsScene extends Component {
       onMoveShouldSetPanResponder: () => true,
 
       onPanResponderMove: (e, gestureState) => {
-
-        /*if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy) || onHorizontalTouch) {
-          if(minimized){
-            onHorizontalTouch = true;
-            this.minimizeVideoAnim.setOffset(300);
-
-            Animated.event([null, {
-              dx: this.dismissMinimizedVideoAnim,
-            }])(e, gestureState);
-          }
-        } else {
-          minimized = false;
-          Animated.event([null, {
-            dy: this.minimizeVideoAnim,
-          }])(e, gestureState);
-        }*/
-
-        //console.log(gestureState.dx + ' ' + gestureState.dy + ' ' + minimized);
-
+        console.log(gestureState.dx + ' ' + gestureState.dy + ' ' + minimized);
+        
         // When video is minimized and user drag video horizontally
         // Lock animation to only onHorizontalTouch, listen to dx
         // When onHorizontalTouch is released, listen to dy
-        if (minimized && gestureState.dx !== 0) {
+        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && minimized) {
           onHorizontalTouch = true;
           Animated.event([null, {
             dx: this.dismissMinimizedVideoAnim,
