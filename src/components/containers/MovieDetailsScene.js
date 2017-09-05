@@ -124,7 +124,8 @@ class MovieDetailsScene extends Component {
                 progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                 onEnd={onEndCallback.bind(this)}
                 onVisitAdvertiser={() => Actions.visitAdvertiser()}
-                preview={{uri: this.props.movie['im:image'][2].label}}/>
+                preview={{uri: this.props.movie['im:image'][2].label}}
+                style={styles.backgroundVideo}/>
     );
   }
 
@@ -145,7 +146,8 @@ class MovieDetailsScene extends Component {
                    ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
                    progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                    onEnd={onEndCallback.bind(this)}
-                   navigator={this.props.navigator}/>
+                   navigator={this.props.navigator}
+                   style={styles.backgroundVideo}/>
     );
   }
 
@@ -242,5 +244,15 @@ class MovieDetailsScene extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});
 
 export default MovieDetailsScene;
